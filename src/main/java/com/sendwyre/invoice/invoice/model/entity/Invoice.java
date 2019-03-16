@@ -1,8 +1,9 @@
-package com.sendwyre.invoice.invoice.model;
+package com.sendwyre.invoice.invoice.model.entity;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 
 @Entity
@@ -93,5 +94,20 @@ public final class Invoice {
 
     public void setItems(List<InvoiceItem> items) {
         this.items = items;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Invoice invoice = (Invoice) o;
+        return Objects.equals(id, invoice.id) &&
+                Objects.equals(address, invoice.address);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, address);
     }
 }

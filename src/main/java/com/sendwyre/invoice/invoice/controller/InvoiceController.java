@@ -1,7 +1,7 @@
 package com.sendwyre.invoice.invoice.controller;
 
-import com.sendwyre.invoice.invoice.model.Invoice;
-import com.sendwyre.invoice.invoice.model.repository.InvoiceRepository;
+import com.sendwyre.invoice.invoice.model.entity.Invoice;
+import com.sendwyre.invoice.invoice.model.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,15 +11,15 @@ import java.util.List;
 public final class InvoiceController {
 
     @Autowired
-    private InvoiceRepository invoiceRepository;
+    private InvoiceService invoiceService;
 
     @GetMapping("/invoices") @ResponseBody final List<Invoice> all() {
-        return invoiceRepository.findAll();
+        return invoiceService.findAll();
     }
 
 
     @PostMapping("/invoices") @ResponseBody final Invoice newInvoice(@RequestBody Invoice invoice) {
-        return invoiceRepository.save(invoice);
+        return invoiceService.initInvoiceAndSave(invoice);
     }
 
 

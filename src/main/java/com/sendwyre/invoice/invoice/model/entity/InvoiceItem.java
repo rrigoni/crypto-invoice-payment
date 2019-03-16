@@ -1,4 +1,4 @@
-package com.sendwyre.invoice.invoice.model;
+package com.sendwyre.invoice.invoice.model.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
