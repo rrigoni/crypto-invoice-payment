@@ -4,6 +4,7 @@ invoice.controller('InvoiceController', function($scope, $http){
 
         $scope.invoices = []
         $scope.displayInvoice = null;
+        $scope.isPaying = false;
         $scope.invoice = {
             items: [],
             date: Date.now(),
@@ -18,6 +19,7 @@ invoice.controller('InvoiceController', function($scope, $http){
 
         $scope.reload = function(){
             $scope.displayInvoice = null;
+            $scope.isPaying = false;
             $http.get('/invoices').success(function(response) {
                 $scope.invoices = response;
             });
@@ -26,6 +28,22 @@ invoice.controller('InvoiceController', function($scope, $http){
         $scope.showInvoice = function(item){
             $http.get("/invoices/" + item.id).success(function(response) {
                 $scope.displayInvoice = response;
+                $scope.isPaying = false;
+            });
+        }
+
+
+        $scope.payInvoice = function(item){
+            $http.get("/invoices/" + item.id).success(function(response) {
+                $scope.displayInvoice = response;
+                $scope.isPaying = true;
+                $scope.refreshList();
+            });
+        }
+
+        $scope.refreshList = function(){
+            $http.get('/invoices').success(function(response) {
+                $scope.invoices = response;
             });
         }
 
@@ -46,6 +64,8 @@ invoice.controller('InvoiceController', function($scope, $http){
         }
 
         $scope.newInvoice = function () {
+            $scope.isPaying = false;
+            $scope.displayInvoice = null;
             $scope.state = 'new';
             $scope.resetInvoice();
         }

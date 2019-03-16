@@ -66,12 +66,12 @@
                 <td>{{inv.id}}</td>
                 <td>{{inv.description}}</td>
                 <td>{{inv.createdAt}}</td>
-                <td>{{inv.paidAmount}}</td>
-                <td>{{inv.totalAmount}}</td>
+                <td>{{inv.cryptoPaidAmount}}</td>
+                <td>{{inv.cryptoAmout}}</td>
                 <td>{{inv.coinType}}</td>
-                <td>{{inv.invoiceState}}</td>
+                <td>{{inv.status}}</td>
                 <td>
-                  <button type="button" class="btn btn-danger" ng-click="remove($index)">Pay</button>
+                  <button type="button" class="btn btn-danger" ng-show="inv.status != 'PAID' " ng-click="payInvoice(inv)">Pay</button>
                   <button type="button" class="btn btn-light" ng-click="showInvoice(inv)">View</button>
                 </td>
 
@@ -121,7 +121,7 @@
             <td><input type="text" ng-model="item.description" class="form-control" /></td>
             <td><input type="number" ng-model="item.qty" class="form-control" /></td>
             <td><input type="number" ng-model="item.price" class="form-control" /></td>
-            <td>{{item.qty * item.price}} BTC</td>
+            <td>{{item.qty * item.price}} Satoshis</td>
             <td><button type="button" class="btn btn-danger" ng-click="remove($index)">Delete</button></td>
           </tr>
           <tr>
@@ -130,7 +130,7 @@
             <td></td>
             <td></td>
             <td>Total : </td>
-            <td>{{total()}} BTC</td>
+            <td>{{total()}} Satoshis</td>
           </tr>
           </tbody>
         </table>
@@ -146,17 +146,18 @@
     </div>
 
 
-    <!-- Invoice View -->
+    <!-- Invoice payment -->
 
-    <div class="row col-12" ng-show="displayInvoice != null">
-      <div class="col-lg-12 text-center">
+
+    <div class="row" ng-show="displayInvoice != null && isPaying">
+      <div class="col-12 text-center">
 
         <div class="container">
           <div class="card">
             <div class="card-header">
               Invoice
               <strong>{{displayInvoice.createdAt}}</strong>
-              <span class="float-right"> <strong>Status:</strong> {{displayInvoice.invoiceState}}</span>
+              <span class="float-right"> <strong>Status:</strong> {{displayInvoice.status}}</span>
 
             </div>
             <div class="card-body">
@@ -175,9 +176,103 @@
                   </div>
                 </div>
 
+              </div>
 
+
+
+              <table class="table table-clear table-responsive-sm">
+                <tbody>
+                <tr>
+                  <td class="left">
+                    <strong>Subtotal</strong>
+                  </td>
+                  <td class="right">{{displayInvoice.cryptoAmout}}</td>
+                </tr>
+                <tr>
+                  <td class="left">
+                    <strong>Total Paid</strong>
+                  </td>
+                  <td class="right">{{displayInvoice.cryptoPaidAmount}}</td>
+                </tr>
+                <tr>
+                  <td class="left">
+                    <strong>Total</strong>
+                  </td>
+                  <td class="right">
+                    <strong>{{displayInvoice.cryptoAmout}}</strong>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+
+
+                <div class="table-responsive-sm">
+
+                    <h4>Transactions</h4>
+                    <div class="table-responsive-sm">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Receiving Address</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr ng-repeat="tx in displayInvoice.transactions">
+                                <td class="center">{{tx.receivingAddress}}</td>
+                                <td class="left strong">{{tx.cryptoAmount}}</td>
+                                <td class="left">{{tx.createdAt}}</td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+              <img ng-show="displayInvoice.status != 'PAID' " src="/qrcode/{{displayInvoice.address}}" width="400px" height="400px">
+              
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- Invoice View -->
+
+    <div class="row" ng-show="displayInvoice != null && isPaying == false">
+      <div class="col-12 text-center">
+
+        <div class="container">
+          <div class="card">
+            <div class="card-header">
+              Invoice
+              <strong>{{displayInvoice.createdAt}}</strong>
+              <span class="float-right"> <strong>Status:</strong> {{displayInvoice.status}}</span>
+
+            </div>
+            <div class="card-body">
+              <div class="row mb-4">
+                <div class="col-sm-6">
+                  <h6 class="mb-3">From:</h6>
+                  <div>
+                    <strong>**********</strong>
+                  </div>
+                </div>
+
+                <div class="col-sm-6">
+                  <h6 class="mb-3">To:</h6>
+                  <div>
+                    <strong>{{displayInvoice.address}}</strong>
+                  </div>
+                </div>
 
               </div>
+
 
               <div class="table-responsive-sm">
                 <table class="table table-striped">
@@ -203,10 +298,37 @@
                   </tbody>
                 </table>
               </div>
-              <div class="row">
-                <div class="col-lg-4 col-sm-5">
 
+
+
+                <div class="table-responsive-sm">
+
+                    <h4>Transactions</h4>
+                    <div class="table-responsive-sm">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Receiving Address</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr ng-repeat="tx in displayInvoice.transactions">
+                                <td class="center">{{tx.receivingAddress}}</td>
+                                <td class="left strong">{{tx.cryptoAmount}}</td>
+                                <td class="left">{{tx.createdAt}}</td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+
+
+
+              <div class="row">
 
                 <div class="col-lg-4 col-sm-5 ml-auto">
                   <table class="table table-clear">
@@ -215,20 +337,20 @@
                       <td class="left">
                         <strong>Subtotal</strong>
                       </td>
-                      <td class="right">{{displayInvoice.totalAmount}}</td>
+                      <td class="right">{{displayInvoice.cryptoAmout}}</td>
                     </tr>
                     <tr>
                       <td class="left">
                         <strong>Total Paid</strong>
                       </td>
-                      <td class="right">{{displayInvoice.paidAmount}}</td>
+                      <td class="right">{{displayInvoice.cryptoPaidAmount}}</td>
                     </tr>
                     <tr>
                       <td class="left">
                         <strong>Total</strong>
                       </td>
                       <td class="right">
-                        <strong>{{displayInvoice.totalAmount}}</strong>
+                        <strong>{{displayInvoice.cryptoAmout}}</strong>
                       </td>
                     </tr>
                     </tbody>

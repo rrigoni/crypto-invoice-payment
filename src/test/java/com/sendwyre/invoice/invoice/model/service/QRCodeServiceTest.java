@@ -36,4 +36,12 @@ public class QRCodeServiceTest extends AbstractTest {
         assertNotEquals("QRCode image cannot be null", oldImage, newImage);
     }
 
+    @Test
+    public void testGenerateQRCodeByteArray() {
+        final String address = walletService.getNetReceivingAddress();
+        byte[] bytes = qrCodeService.generateQRCodeByteArray(address);
+
+        assertNotNull("QRCode byte array cannot be null", bytes);
+    }
+
 }

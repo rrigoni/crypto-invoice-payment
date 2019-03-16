@@ -41,7 +41,7 @@ public final class InvoiceServiceTest extends AbstractTest {
         Invoice invoice = new Invoice();
         invoice.setCoinType(CoinType.BTC);
         invoice.setDescription("some description");
-        invoice.setInvoiceState(InvoiceState.NEW);
+        invoice.setInvoiceState(InvoiceState.PARTIALLY_PAID);
         invoice.setPaidAmount(0);
         invoice.setTotalAmount(100);
 

@@ -1,5 +1,7 @@
 package com.sendwyre.invoice.invoice.model.entity;
 
+import org.bitcoinj.core.Coin;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.Objects;
 @Entity
 public final class Invoice {
 
+    private static final long MILLIS_IN_A_DAY  = 86400000l;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,11 +20,13 @@ public final class Invoice {
     private long totalAmount;
     private long paidAmount;
     private CoinType coinType = CoinType.BTC;
-    private InvoiceState invoiceState = InvoiceState.NEW;
+    private InvoiceState invoiceState;
     private String description;
     private Date createdAt = new Date();
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InvoiceItem> items;
+    @Transient
+    private List<Transaction> transactions;
 
 
     public String getAddress() {
@@ -94,6 +99,38 @@ public final class Invoice {
 
     public void setItems(List<InvoiceItem> items) {
         this.items = items;
+    }
+
+    public String getCryptoAmout() {
+        return Coin.valueOf(totalAmount).toFriendlyString();
+    }
+
+    public String getCryptoPaidAmount() {
+        return Coin.valueOf(paidAmount).toFriendlyString();
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
+    public InvoiceState getStatus() {
+        long elapsedCreationTimeInMillis = (System.currentTimeMillis() - createdAt.getTime());
+        if (elapsedCreationTimeInMillis > MILLIS_IN_A_DAY) {
+            if (paidAmount >= totalAmount) {
+                return InvoiceState.PAID;
+            } else {
+                return InvoiceState.EXPIRED;
+            }
+        }
+        if (paidAmount >= totalAmount) {
+            return InvoiceState.PAID;
+        } else {
+            return InvoiceState.PARTIALLY_PAID;
+        }
     }
 
     @Override

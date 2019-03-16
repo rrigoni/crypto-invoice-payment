@@ -1,18 +1,22 @@
 package com.sendwyre.invoice.invoice.model.entity;
 
-import javax.persistence.*;
+import org.bitcoinj.core.Coin;
+
 import java.util.Date;
 
-
-@Entity
 public final class Transaction {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
     private String receivingAddress;
     private long total;
     private Date createdAt;
+
+    public Transaction() { }
+
+    public Transaction(String receivingAddress, long total, Date createdAt) {
+        this.receivingAddress = receivingAddress;
+        this.total = total;
+        this.createdAt = createdAt;
+    }
 
     public String getReceivingAddress() {
         return receivingAddress;
@@ -36,6 +40,10 @@ public final class Transaction {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getCryptoAmount() {
+        return Coin.valueOf(total).toFriendlyString();
     }
 
 }
