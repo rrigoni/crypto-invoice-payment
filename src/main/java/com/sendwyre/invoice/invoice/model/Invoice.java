@@ -15,13 +15,12 @@ public final class Invoice {
     private String address;
     private long totalAmount;
     private long paidAmount;
-
-    @OneToMany(mappedBy = "invoice_id", cascade = CascadeType.ALL)
-    private List<Transaction> transactions;
-    private CoinType coinType;
-    private InvoiceState invoiceState;
+    private CoinType coinType = CoinType.BTC;
+    private InvoiceState invoiceState = InvoiceState.NEW;
     private String description;
-    private Date createdAt;
+    private Date createdAt = new Date();
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<InvoiceItem> items;
 
 
     public String getAddress() {
@@ -46,14 +45,6 @@ public final class Invoice {
 
     public void setPaidAmount(long paidAmount) {
         this.paidAmount = paidAmount;
-    }
-
-    public List<Transaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
     }
 
     public CoinType getCoinType() {
@@ -86,5 +77,21 @@ public final class Invoice {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<InvoiceItem> getItems() {
+        return items;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setItems(List<InvoiceItem> items) {
+        this.items = items;
     }
 }

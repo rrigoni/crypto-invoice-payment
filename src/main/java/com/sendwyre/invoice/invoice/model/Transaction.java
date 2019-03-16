@@ -13,9 +13,6 @@ public final class Transaction {
     private String receivingAddress;
     private long total;
     private Date createdAt;
-    @ManyToOne
-    private Invoice invoice;
-
 
     public String getReceivingAddress() {
         return receivingAddress;
@@ -41,11 +38,4 @@ public final class Transaction {
         this.createdAt = createdAt;
     }
 
-    public Invoice getInvoice() {
-        return invoice;
-    }
-
-    public void setInvoice(Invoice invoice) {
-        this.invoice = invoice;
-    }
 }

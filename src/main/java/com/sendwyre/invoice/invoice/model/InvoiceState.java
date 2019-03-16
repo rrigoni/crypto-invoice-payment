@@ -1,5 +1,5 @@
 package com.sendwyre.invoice.invoice.model;
 
 public enum InvoiceState {
-    EXPIRED, PAID, PARTIALLY_PAID
+    NEW, EXPIRED, PAID, PARTIALLY_PAID
 }

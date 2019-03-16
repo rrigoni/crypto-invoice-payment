@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>BTC Invoice System</title>
+
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular.min.js"></script>
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">Start Bootstrap</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home
+            <span class="sr-only">(current)</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Services</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Page Content -->
+<div class="container" ng-controller="InvoiceController" ng-app="invoice">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+
+        <section class="jumbotron">
+          <h1>Invoices</h1>
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th>ID</th>
+              <th>Description</th>
+              <th>Created</th>
+              <th>Total Paid</th>
+              <th>Total</th>
+              <th>CoinType</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="inv in invoices">
+                <td>{{inv.id}}</td>
+                <td>{{inv.description}}</td>
+                <td>{{inv.createdAt}}</td>
+                <td>{{inv.paidAmount}}</td>
+                <td>{{inv.totalAmount}}</td>
+                <td>{{inv.coinType}}</td>
+                <td>{{inv.invoiceState}}</td>
+                <td>
+                  <button type="button" class="btn btn-danger" ng-click="remove($index)">Pay</button>
+                  <button type="button" class="btn btn-light" href="/asdasd">View</button>
+                </td>
+
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="row">
+            <div class="col-12">
+              <button type="button" class="btn btn-primary float-left" ng-click="newInvoice()">New Invoice</button>
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+
+    </div>
+
+
+    <div class="col-12" ng-show="state == 'new'">
+
+
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="description" aria-label="description" ng-model="invoice.description" aria-describedby="basic-addon1">
+      </div>
+
+      <section class="row">
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Delete</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="item in invoice.items">
+            <td><input type="text" ng-model="item.name" class="form-control" /></td>
+            <td><input type="text" ng-model="item.description" class="form-control" /></td>
+            <td><input type="number" ng-model="item.qty" class="form-control" /></td>
+            <td><input type="number" ng-model="item.price" class="form-control" /></td>
+            <td>{{item.qty * item.price}} BTC</td>
+            <td><button type="button" class="btn btn-danger" ng-click="remove($index)">Delete</button></td>
+          </tr>
+          <tr>
+            <td><button type="button" class="btn btn-primary" ng-click="add()">Add item</button></td>
+            <td></td>
+            <td></td>
+            <td>Total : </td>
+            <td>{{total()}} BTC</td>
+          </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <div class="row">
+        <div class="col-12">
+          <button type="button" class="btn btn-primary float-right" ng-click="save()">Save Invoice</button>
+          <button type="button" class="btn btn-primary float-right" ng-click="state = 'list' ">Cancel</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script type="text/javascript" src="js/invoice.js"/>
+
+</div>
+</div>
+
+<!-- Bootstrap core JavaScript -->
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
