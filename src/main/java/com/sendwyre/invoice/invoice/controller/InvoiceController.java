@@ -17,6 +17,10 @@ public final class InvoiceController {
         return invoiceService.findAll();
     }
 
+    @GetMapping("/invoices/{id}") @ResponseBody final Invoice getInvoice(@PathVariable Long id) {
+        return invoiceService.findById(id);
+    }
+
 
     @PostMapping("/invoices") @ResponseBody final Invoice newInvoice(@RequestBody Invoice invoice) {
         return invoiceService.initInvoiceAndSave(invoice);

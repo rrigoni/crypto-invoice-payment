@@ -5,8 +5,8 @@
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
+  <meta name="description" content="Crypto Invoice Payment System">
+  <meta name="author" content="Ronaldo Rigoni">
 
   <title>BTC Invoice System</title>
 
@@ -20,25 +20,19 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
   <div class="container">
-    <a class="navbar-brand" href="#">Start Bootstrap</a>
+    <a class="navbar-brand" href="#">Crypto Invoice System</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="#">Home
+          <a class="nav-link" href="index.html">Invoices
             <span class="sr-only">(current)</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Services</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Contact</a>
+          <a class="nav-link" href="wallet.html">Wallet</a>
         </li>
       </ul>
     </div>
@@ -78,7 +72,7 @@
                 <td>{{inv.invoiceState}}</td>
                 <td>
                   <button type="button" class="btn btn-danger" ng-click="remove($index)">Pay</button>
-                  <button type="button" class="btn btn-light" href="/asdasd">View</button>
+                  <button type="button" class="btn btn-light" ng-click="showInvoice(inv)">View</button>
                 </td>
 
               </tr>
@@ -98,6 +92,10 @@
     </div>
 
 
+    <!-- Forms -->
+
+
+    <!-- Invoice Form -->
     <div class="col-12" ng-show="state == 'new'">
 
 
@@ -130,6 +128,7 @@
             <td><button type="button" class="btn btn-primary" ng-click="add()">Add item</button></td>
             <td></td>
             <td></td>
+            <td></td>
             <td>Total : </td>
             <td>{{total()}} BTC</td>
           </tr>
@@ -145,6 +144,109 @@
       </div>
 
     </div>
+
+
+    <!-- Invoice View -->
+
+    <div class="row col-12" ng-show="displayInvoice != null">
+      <div class="col-lg-12 text-center">
+
+        <div class="container">
+          <div class="card">
+            <div class="card-header">
+              Invoice
+              <strong>{{displayInvoice.createdAt}}</strong>
+              <span class="float-right"> <strong>Status:</strong> {{displayInvoice.invoiceState}}</span>
+
+            </div>
+            <div class="card-body">
+              <div class="row mb-4">
+                <div class="col-sm-6">
+                  <h6 class="mb-3">From:</h6>
+                  <div>
+                    <strong>Webz Poland</strong>
+                  </div>
+                </div>
+
+                <div class="col-sm-6">
+                  <h6 class="mb-3">To:</h6>
+                  <div>
+                    <strong>{{displayInvoice.address}}</strong>
+                  </div>
+                </div>
+
+
+
+              </div>
+
+              <div class="table-responsive-sm">
+                <table class="table table-striped">
+                  <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+
+                  <tr ng-repeat="item in displayInvoice.items">
+                    <td class="center">{{item.name}}</td>
+                    <td class="left strong">{{item.description}}</td>
+                    <td class="left">{{item.qty}}</td>
+                    <td class="center">{{item.price}}</td>
+                    <td class="right">{{item.qty * item.price}} BTC</td>
+                  </tr>
+
+                  </tbody>
+                </table>
+              </div>
+              <div class="row">
+                <div class="col-lg-4 col-sm-5">
+
+                </div>
+
+                <div class="col-lg-4 col-sm-5 ml-auto">
+                  <table class="table table-clear">
+                    <tbody>
+                    <tr>
+                      <td class="left">
+                        <strong>Subtotal</strong>
+                      </td>
+                      <td class="right">{{displayInvoice.totalAmount}}</td>
+                    </tr>
+                    <tr>
+                      <td class="left">
+                        <strong>Total Paid</strong>
+                      </td>
+                      <td class="right">{{displayInvoice.paidAmount}}</td>
+                    </tr>
+                    <tr>
+                      <td class="left">
+                        <strong>Total</strong>
+                      </td>
+                      <td class="right">
+                        <strong>{{displayInvoice.totalAmount}}</strong>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
 
   </div>
 

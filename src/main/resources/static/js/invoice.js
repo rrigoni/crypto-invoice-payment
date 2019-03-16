@@ -3,7 +3,7 @@ var invoice = angular.module('invoice', []);
 invoice.controller('InvoiceController', function($scope, $http){
 
         $scope.invoices = []
-
+        $scope.displayInvoice = null;
         $scope.invoice = {
             items: [],
             date: Date.now(),
@@ -17,9 +17,15 @@ invoice.controller('InvoiceController', function($scope, $http){
 
 
         $scope.reload = function(){
+            $scope.displayInvoice = null;
             $http.get('/invoices').success(function(response) {
                 $scope.invoices = response;
-                console.log($scope.invoices);
+            });
+        }
+
+        $scope.showInvoice = function(item){
+            $http.get("/invoices/" + item.id).success(function(response) {
+                $scope.displayInvoice = response;
             });
         }
 
