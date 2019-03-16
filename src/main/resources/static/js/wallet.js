@@ -8,7 +8,8 @@ invoice.controller('WalletController', function($scope, $http){
             $http.get("/wallet").success(function(response) {
                 $scope.wallet = response;
             });
+            setTimeout($scope.reload, 3000);
         }
 
-        window.setInterval($scope.reload,10000);
+        setTimeout($scope.reload, 3000)
 });
