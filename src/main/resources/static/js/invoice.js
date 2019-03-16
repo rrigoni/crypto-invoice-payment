@@ -1,6 +1,6 @@
 var invoice = angular.module('invoice', []);
 
-invoice.controller('InvoiceController', function($scope, $http){
+invoice.controller('InvoiceController', function($scope, $http, $interval){
 
         $scope.invoices = []
         $scope.displayInvoice = null;
@@ -100,6 +100,18 @@ invoice.controller('InvoiceController', function($scope, $http){
             })
             return total;
         }
+
+        $scope.refreshDisplayInvoice = function(){
+            if($scope.displayInvoice != null) {
+                $http.get("/invoices/" + $scope.displayInvoice.id).success(function(response) {
+                    $scope.displayInvoice = response;
+                    $scope.refreshList();
+                });
+            }
+            setTimeout($scope.refreshDisplayInvoice, 3000);
+        }
+
+        setTimeout($scope.refreshDisplayInvoice, 3000);
 
         $scope.reload();
 });

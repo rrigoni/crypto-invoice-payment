@@ -10,5 +10,5 @@ invoice.controller('WalletController', function($scope, $http){
             });
         }
 
-        $scope.reload();
+        window.setInterval($scope.reload,10000);
 });
