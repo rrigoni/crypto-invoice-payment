@@ -9,13 +9,15 @@ public final class Transaction {
     private String receivingAddress;
     private long total;
     private Date createdAt;
+    private String status;
 
     public Transaction() { }
 
-    public Transaction(String receivingAddress, long total, Date createdAt) {
+    public Transaction(String receivingAddress, long total, Date createdAt, String status) {
         this.receivingAddress = receivingAddress;
         this.total = total;
         this.createdAt = createdAt;
+        this.status = status;
     }
 
     public String getReceivingAddress() {
@@ -46,4 +48,11 @@ public final class Transaction {
         return Coin.valueOf(total).toFriendlyString();
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

@@ -8,10 +8,7 @@ import org.bitcoinj.script.ScriptException;
 import org.bitcoinj.store.BlockStore;
 import org.bitcoinj.store.BlockStoreException;
 import org.bitcoinj.store.SPVBlockStore;
-import org.bitcoinj.wallet.KeyChain;
-import org.bitcoinj.wallet.UnreadableWalletException;
-import org.bitcoinj.wallet.Wallet;
-import org.bitcoinj.wallet.WalletFiles;
+import org.bitcoinj.wallet.*;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
@@ -86,6 +83,7 @@ public final class WalletService implements InitializingBean {
             tx.setReceivingAddress(receivingAddress);
             tx.setCreatedAt(transaction.getUpdateTime());
             tx.setTotal(transaction.getValue(wallet).value);
+            tx.setStatus(transaction.getConfidence().getConfidenceType().name());
             list.add(tx);
         }
         return list;
@@ -104,5 +102,13 @@ public final class WalletService implements InitializingBean {
             }
         }
         return null;
+    }
+
+    public long getBalance() {
+        return wallet.getBalance().value;
+    }
+
+    public String getFriendlyAmount(long balance) {
+        return Coin.valueOf(balance).toFriendlyString();
     }
 }

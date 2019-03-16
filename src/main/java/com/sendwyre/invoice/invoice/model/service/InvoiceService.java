@@ -20,6 +20,7 @@ public final class InvoiceService {
     private InvoiceRepository invoiceRepository;
 
     public Invoice initInvoiceAndSave(Invoice invoice) {
+        // we assign a unique address to the invoice to match incoming trasactions in the wallet.
         invoice.setAddress(walletService.getNetReceivingAddress());
         return invoiceRepository.save(invoice);
     }
