@@ -19,7 +19,7 @@ public final class Invoice {
     private String address;
     private long totalAmount;
     private long paidAmount;
-    private CoinType coinType = CoinType.BTC;
+    private String coinType;
     private InvoiceState invoiceState;
     private String description;
     private Date createdAt = new Date();
@@ -53,11 +53,11 @@ public final class Invoice {
         this.paidAmount = paidAmount;
     }
 
-    public CoinType getCoinType() {
+    public String getCoinType() {
         return coinType;
     }
 
-    public void setCoinType(CoinType coinType) {
+    public void setCoinType(String coinType) {
         this.coinType = coinType;
     }
 
