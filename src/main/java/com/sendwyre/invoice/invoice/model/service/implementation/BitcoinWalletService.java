@@ -4,7 +4,7 @@ import com.sendwyre.invoice.invoice.model.entity.CoinType;
 import com.sendwyre.invoice.invoice.model.service.WalletService;
 import org.bitcoinj.core.*;
 import org.bitcoinj.net.discovery.DnsDiscovery;
-import org.bitcoinj.params.TestNet3Params;
+import org.bitcoinj.params.MainNetParams;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptException;
 import org.bitcoinj.store.BlockStore;
@@ -32,7 +32,7 @@ public final class BitcoinWalletService implements InitializingBean, DisposableB
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private Wallet wallet;
-    private final NetworkParameters networkParameters = TestNet3Params.get();
+    private final NetworkParameters networkParameters = MainNetParams.get();
     private final File walletFile = new File("wallet.file");
     private final File blockstore = new File("blockstore.file");
     private PeerGroup peerGroup;
