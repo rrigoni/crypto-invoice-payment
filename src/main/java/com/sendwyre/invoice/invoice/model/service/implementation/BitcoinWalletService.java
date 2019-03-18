@@ -111,7 +111,7 @@ public final class BitcoinWalletService implements InitializingBean, DisposableB
 
     @Override
     public long getBalance() {
-        return wallet.getBalance().value;
+        return wallet.getBalance(Wallet.BalanceType.ESTIMATED).value;
     }
 
     @Override

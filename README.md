@@ -17,7 +17,7 @@ Instructions
 
 
 If you run it in `app.testmode = true` and then you want to run as `app.testmode = false`
-you shoud delete the wallet.file due to incompatibility in testnet and mainnet generated wallets. 
+you shoud delete the `wallet.file and blockstore.file` due to incompatibility in testnet and mainnet generated wallets. 
 
 
 ### Please, read this first: 
