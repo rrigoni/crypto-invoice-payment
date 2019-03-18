@@ -37,4 +37,10 @@ public interface WalletService {
      * @return
      */
     Wallet getWallet();
+
+    /**
+     * Return the coin symbol
+     * @return
+     */
+    String getCoinSymbol();
 }

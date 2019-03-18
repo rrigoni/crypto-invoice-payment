@@ -1,7 +1,6 @@
 package com.sendwyre.invoice.invoice.model.service;
 
 import com.sendwyre.invoice.invoice.AbstractTest;
-import com.sendwyre.invoice.invoice.model.entity.CoinType;
 import com.sendwyre.invoice.invoice.model.entity.Invoice;
 import com.sendwyre.invoice.invoice.model.entity.InvoiceItem;
 import com.sendwyre.invoice.invoice.model.entity.InvoiceState;
@@ -11,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public final class InvoiceServiceTest extends AbstractTest {
 
@@ -39,7 +39,7 @@ public final class InvoiceServiceTest extends AbstractTest {
 
     private Invoice generateInvoice() {
         Invoice invoice = new Invoice();
-        invoice.setCoinType(CoinType.BTC);
+        invoice.setCoinType("BTC");
         invoice.setDescription("some description");
         invoice.setInvoiceState(InvoiceState.PARTIALLY_PAID);
         invoice.setPaidAmount(0);

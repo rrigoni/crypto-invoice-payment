@@ -22,8 +22,9 @@ public class InvoiceService {
 
     @Transactional
     public Invoice initInvoiceAndSave(Invoice invoice) {
-        // we assign a unique address to the invoice to match incoming trasactions in the wallet.
+        // we assign a unique address to the invoice to match incoming transactions in the wallet.
         invoice.setAddress(walletService.getNetReceivingAddress());
+        invoice.setCoinType(walletService.getCoinSymbol());
         return invoiceRepository.save(invoice);
     }
 

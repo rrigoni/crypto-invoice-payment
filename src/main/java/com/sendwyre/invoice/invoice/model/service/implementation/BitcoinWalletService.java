@@ -5,6 +5,7 @@ import com.sendwyre.invoice.invoice.model.service.WalletService;
 import org.bitcoinj.core.*;
 import org.bitcoinj.net.discovery.DnsDiscovery;
 import org.bitcoinj.params.MainNetParams;
+import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptException;
 import org.bitcoinj.store.BlockStore;
@@ -17,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -29,14 +31,18 @@ import java.util.concurrent.TimeUnit;
 @Component
 public final class BitcoinWalletService implements InitializingBean, DisposableBean, WalletService {
 
+    private static String COIN_SYMBOL = "BTC";
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private Wallet wallet;
-    private final NetworkParameters networkParameters = MainNetParams.get();
+    private NetworkParameters networkParameters;
     private final File walletFile = new File("wallet.file");
     private final File blockstore = new File("blockstore.file");
     private PeerGroup peerGroup;
     private BlockStore blockStore;
+    @Value("${app.testmode}")
+    private Boolean testMode;
 
 
     @Override
@@ -45,6 +51,7 @@ public final class BitcoinWalletService implements InitializingBean, DisposableB
     }
 
     private void initialize() throws BlockStoreException, UnreadableWalletException, IOException {
+        networkParameters = testMode ? TestNet3Params.get() : MainNetParams.get();
         if(walletFile.exists()) {
             wallet = Wallet.loadFromFile(walletFile);
         } else {
@@ -114,7 +121,12 @@ public final class BitcoinWalletService implements InitializingBean, DisposableB
 
     @Override
     public com.sendwyre.invoice.invoice.model.entity.Wallet getWallet() {
-        return new com.sendwyre.invoice.invoice.model.entity.Wallet(CoinType.BTC.name(), getFriendlyBalanceString(), getWalletTransctions());
+        return new com.sendwyre.invoice.invoice.model.entity.Wallet(COIN_SYMBOL, getFriendlyBalanceString(), getWalletTransctions());
+    }
+
+    @Override
+    public String getCoinSymbol() {
+        return COIN_SYMBOL;
     }
 
     @Override

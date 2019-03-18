@@ -16,6 +16,10 @@ Instructions
 - See the invoice changing status automatically
 
 
+If you run it in `app.testmode = true` and then you want to run as `app.testmode = false`
+you shoud delete the wallet.file due to incompatibility in testnet and mainnet generated wallets. 
+
+
 ### Please, read this first: 
 
 - ##### Important, this system considers PENDING transactions as a payment received. Future improvements can achieve that. 
