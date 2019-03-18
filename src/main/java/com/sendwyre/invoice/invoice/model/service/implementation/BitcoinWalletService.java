@@ -39,9 +39,6 @@ public final class BitcoinWalletService implements InitializingBean, DisposableB
     private PeerGroup peerGroup;
     private BlockStore blockStore;
 
-    @Value("${wallet.password}")
-    private String walletPassword;
-
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -54,7 +51,6 @@ public final class BitcoinWalletService implements InitializingBean, DisposableB
         } else {
             wallet = Wallet.createDeterministic(networkParameters, Script.ScriptType.P2PKH);
         }
-        wallet.encrypt(walletPassword);
         wallet.saveToFile(walletFile);
         wallet.autosaveToFile(walletFile, 60, TimeUnit.SECONDS, new BitcoinWalletSaverListener());
         startSyncing();
