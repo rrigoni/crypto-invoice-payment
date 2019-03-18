@@ -44,9 +44,8 @@ public final class QRCodeService {
 
     public BufferedImage generateQRCodeImage(String address) {
         final QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        final BitMatrix bitMatrix;
         try {
-            bitMatrix = qrCodeWriter.encode(address, BarcodeFormat.QR_CODE, qrcodeWidth, qrcodeHeight);
+            final BitMatrix bitMatrix = qrCodeWriter.encode(address, BarcodeFormat.QR_CODE, qrcodeWidth, qrcodeHeight);
             return MatrixToImageWriter.toBufferedImage(bitMatrix);
         } catch (WriterException e) {
             logger.error("Error while generating QRCode", e);

@@ -28,22 +28,18 @@ public final class InvoiceService {
     public List<Invoice> findAll() {
         final List<Invoice> all = invoiceRepository.findAll();
         for (Invoice invoice : all) {
-            updateInvoiceTranscations(invoice);
-            updateInvoiceAmounts(invoice);
+            updateInvoice(invoice);
         }
         return all;
     }
 
-    public Invoice findById(Long id) {
-        Invoice invoice = invoiceRepository.findById(id).orElse(null);
-        if (invoice != null) {
-            updateInvoiceTranscations(invoice);
-            updateInvoiceAmounts(invoice);
-        }
-        return invoice;
+    private void updateInvoice(Invoice invoice) {
+        updateInvoiceTranscations(invoice);
+        updateInvoiceAmounts(invoice);
     }
 
     private void updateInvoiceAmounts(Invoice invoice) {
+        // reset payments values to prevent double summing
         invoice.setPaidAmount(0);
         invoice.setTotalAmount(0);
         for(Transaction transaction : invoice.getTransactions()) {
@@ -56,7 +52,6 @@ public final class InvoiceService {
 
 
     public Invoice updateInvoiceTranscations(Invoice invoice) {
-        final String invoiceAddress = invoice.getAddress();
         final List<Transaction> transactions = new ArrayList<>();
 
         for (Transaction tx : walletService.getWalletTransctions()) {
@@ -65,6 +60,15 @@ public final class InvoiceService {
             }
         }
         invoice.setTransactions(transactions);
+        return invoice;
+    }
+
+
+    public Invoice findById(Long id) {
+        Invoice invoice = invoiceRepository.findById(id).orElse(null);
+        if (invoice != null) {
+            updateInvoice(invoice);
+        }
         return invoice;
     }
 

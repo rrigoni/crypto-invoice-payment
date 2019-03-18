@@ -10,6 +10,8 @@ import org.bitcoinj.store.BlockStore;
 import org.bitcoinj.store.BlockStoreException;
 import org.bitcoinj.store.SPVBlockStore;
 import org.bitcoinj.wallet.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +24,8 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public final class BitcoinWalletService implements InitializingBean, WalletService {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private Wallet wallet;
     private final NetworkParameters networkParameters = TestNet3Params.get();
@@ -42,17 +46,7 @@ public final class BitcoinWalletService implements InitializingBean, WalletServi
             wallet = Wallet.createDeterministic(networkParameters, Script.ScriptType.P2PKH);
         }
         wallet.saveToFile(walletFile);
-        wallet.autosaveToFile(walletFile, 60, TimeUnit.SECONDS, new WalletFiles.Listener() {
-            @Override
-            public void onBeforeAutoSave(File file) {
-
-            }
-
-            @Override
-            public void onAfterAutoSave(File file) {
-
-            }
-        });
+        wallet.autosaveToFile(walletFile, 60, TimeUnit.SECONDS, new BitcoinWalletSaverListener());
         startSyncing();
     }
 
@@ -96,7 +90,8 @@ public final class BitcoinWalletService implements InitializingBean, WalletServi
                     Address address = script.getToAddress(networkParameters, true);
                     return address.toString();
                 }
-            } catch (final ScriptException x) {
+            } catch (final ScriptException ex) {
+                logger.error("Error while getting the transaction receiver address ", ex);
             }
         }
         return null;
