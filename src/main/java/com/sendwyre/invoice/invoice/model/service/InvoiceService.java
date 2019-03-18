@@ -8,17 +8,19 @@ import com.sendwyre.invoice.invoice.model.repository.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public final class InvoiceService {
+public class InvoiceService {
 
     @Autowired
     private WalletService walletService;
     @Autowired
     private InvoiceRepository invoiceRepository;
 
+    @Transactional
     public Invoice initInvoiceAndSave(Invoice invoice) {
         // we assign a unique address to the invoice to match incoming trasactions in the wallet.
         invoice.setAddress(walletService.getNetReceivingAddress());

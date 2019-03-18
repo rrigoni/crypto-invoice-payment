@@ -1,6 +1,7 @@
 package com.sendwyre.invoice.invoice.model.service;
 
 import com.sendwyre.invoice.invoice.model.entity.Transaction;
+import com.sendwyre.invoice.invoice.model.entity.Wallet;
 
 import java.util.List;
 
@@ -30,4 +31,10 @@ public interface WalletService {
      * @return
      */
     String getFriendlyBalanceString();
+
+    /**
+     * Get wallet information.
+     * @return
+     */
+    Wallet getWallet();
 }

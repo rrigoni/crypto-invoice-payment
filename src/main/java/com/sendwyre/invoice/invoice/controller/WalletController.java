@@ -15,10 +15,7 @@ public final class WalletController {
     private WalletService walletService;
 
     @GetMapping("/wallet") @ResponseBody final Wallet all() {
-        List<Transaction> walletTransctions = walletService.getWalletTransctions();
-        long balance = walletService.getBalance();
-        String friendlyAmount = walletService.getFriendlyBalanceString();
-        return  new Wallet(friendlyAmount, walletTransctions);
+        return walletService.getWallet();
     }
 
 

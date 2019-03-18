@@ -1,5 +1,6 @@
 package com.sendwyre.invoice.invoice.model.service.implementation;
 
+import com.sendwyre.invoice.invoice.model.entity.CoinType;
 import com.sendwyre.invoice.invoice.model.service.WalletService;
 import org.bitcoinj.core.*;
 import org.bitcoinj.net.discovery.DnsDiscovery;
@@ -9,10 +10,14 @@ import org.bitcoinj.script.ScriptException;
 import org.bitcoinj.store.BlockStore;
 import org.bitcoinj.store.BlockStoreException;
 import org.bitcoinj.store.SPVBlockStore;
-import org.bitcoinj.wallet.*;
+import org.bitcoinj.wallet.KeyChain;
+import org.bitcoinj.wallet.UnreadableWalletException;
+import org.bitcoinj.wallet.Wallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -23,7 +28,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public final class BitcoinWalletService implements InitializingBean, WalletService {
+public final class BitcoinWalletService implements InitializingBean, DisposableBean, WalletService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -32,6 +37,10 @@ public final class BitcoinWalletService implements InitializingBean, WalletServi
     private final File walletFile = new File("wallet.file");
     private final File blockstore = new File("blockstore.file");
     private PeerGroup peerGroup;
+    private BlockStore blockStore;
+
+    @Value("${wallet.password}")
+    private String walletPassword;
 
 
     @Override
@@ -45,13 +54,14 @@ public final class BitcoinWalletService implements InitializingBean, WalletServi
         } else {
             wallet = Wallet.createDeterministic(networkParameters, Script.ScriptType.P2PKH);
         }
+        wallet.encrypt(walletPassword);
         wallet.saveToFile(walletFile);
         wallet.autosaveToFile(walletFile, 60, TimeUnit.SECONDS, new BitcoinWalletSaverListener());
         startSyncing();
     }
 
     private void startSyncing() throws BlockStoreException {
-        final BlockStore blockStore = new SPVBlockStore(networkParameters, blockstore);
+        blockStore = new SPVBlockStore(networkParameters, blockstore);
         final BlockChain chain = new BlockChain(networkParameters, wallet, blockStore);
         peerGroup = new PeerGroup(networkParameters, chain);
         peerGroup.addWallet(wallet);
@@ -105,5 +115,24 @@ public final class BitcoinWalletService implements InitializingBean, WalletServi
     @Override
     public String getFriendlyBalanceString() {
         return Coin.valueOf(getBalance()).toFriendlyString();
+    }
+
+    @Override
+    public com.sendwyre.invoice.invoice.model.entity.Wallet getWallet() {
+        return new com.sendwyre.invoice.invoice.model.entity.Wallet(CoinType.BTC.name(), getFriendlyBalanceString(), getWalletTransctions());
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        if (wallet != null) {
+            wallet.saveToFile(walletFile);
+            wallet.shutdownAutosaveAndWait();
+        }
+        if (peerGroup != null && peerGroup.isRunning()) {
+            peerGroup.stop();
+        }
+        if (blockStore != null) {
+            blockStore.close();
+        }
     }
 }

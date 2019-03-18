@@ -1,32 +1,17 @@
 package com.sendwyre.invoice.invoice.model.entity;
 
-import org.bitcoinj.core.Coin;
-
 import java.util.List;
 
-public class Wallet {
+public final class Wallet {
 
-    private String balance;
-    private List<Transaction> transactions;
+    public final String coinType;
+    public final String balance;
+    public final List<Transaction> transactions;
 
-    public Wallet(String balance, List<Transaction> transactions) {
+    public Wallet(String coinType, String balance, List<Transaction> transactions) {
+        this.coinType = coinType;
         this.balance = balance;
         this.transactions = transactions;
     }
 
-    public String getBalance() {
-        return balance;
-    }
-
-    public void setBalance(String balance) {
-        this.balance = balance;
-    }
-
-    public List<Transaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
-    }
 }
